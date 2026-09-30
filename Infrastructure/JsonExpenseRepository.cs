@@ -3,7 +3,7 @@ using ExpenseTrackerCLI.Models;
 
 namespace ExpenseTrackerCLI.Infrastructure;
 
-public class ExpenseRepository : IExpenseRepository
+public class JsonExpenseRepository : IExpenseRepository
 {
     private static readonly JsonSerializerOptions SerializerOptions = new() { WriteIndented = true };
 
