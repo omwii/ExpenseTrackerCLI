@@ -11,6 +11,8 @@ public class DeleteCommand(IExpenseService expenseService) : ICommand
 
         var idArgument = new Argument<Guid>("id");
         
+        command.Add(idArgument);
+        
         command.SetAction(result =>
         {
             var id = result.GetRequiredValue(idArgument);
