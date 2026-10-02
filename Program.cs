@@ -1,11 +1,33 @@
 ﻿using System.CommandLine;
 using ExpenseTrackerCLI.Commands;
+using ExpenseTrackerCLI.Infrastructure;
+using ExpenseTrackerCLI.Services;
+using Microsoft.Extensions.DependencyInjection;
 
-// Root command
+// Builder
+var services = new ServiceCollection();
+
+// Services
+services.AddSingleton<IExpenseService, ExpenseService>();
+
+// Infrastructure
+services.AddTransient<IExpenseRepository, JsonExpenseRepository>();
+services.AddTransient<IExpenseExporter, CsvExpenseExporter>();
+
+// Commands
+services.AddTransient<ICommand, AddCommand>();
+services.AddTransient<ICommand, DeleteCommand>();
+services.AddTransient<ICommand, ExportCommand>();
+services.AddTransient<ICommand, ListCommand>();
+services.AddTransient<ICommand, SetBudgetCommand>();
+services.AddTransient<ICommand, UpdateCommand>();
+
+// Build
+var provider = services.BuildServiceProvider();
+
+// Initialize
 var rootCommand = new RootCommand("CLI tool for tracking your expenses");
-rootCommand.Add(new AddCommand());
-rootCommand.Add(new DeleteCommand());
-rootCommand.Add(new ExportCommand());
-rootCommand.Add(new ListCommand());
-rootCommand.Add(new SetBudgetCommand());
-rootCommand.Add(new UpdateCommand());
+foreach (var command in provider.GetServices<ICommand>())
+    rootCommand.Add(command.Build());
+
+rootCommand.Parse(args).Invoke();
