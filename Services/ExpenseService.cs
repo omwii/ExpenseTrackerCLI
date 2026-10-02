@@ -5,15 +5,15 @@ namespace ExpenseTrackerCLI.Services;
 
 public class ExpenseService(IExpenseRepository repository) : IExpenseService
 {
-    private readonly Dictionary<Guid, Expense> _expenses = new();
-    
+    public Dictionary<Guid, Expense> Expenses { get; } = new();
+
     public void Add(decimal amount, string? description, string? category, DateTime createdAt)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(amount);
 
         var expense = new Expense(Guid.NewGuid(), amount, description, category, createdAt);
         
-        _expenses.Add(expense.Id, expense);
+        Expenses.Add(expense.Id, expense);
 
         try
         {
@@ -28,7 +28,7 @@ public class ExpenseService(IExpenseRepository repository) : IExpenseService
 
     public void Update(Guid id, decimal? amount, string? description, string? category)
     {
-        if (!_expenses.TryGetValue(id, out var expense)) throw new KeyNotFoundException();
+        if (!Expenses.TryGetValue(id, out var expense)) throw new KeyNotFoundException();
         
         expense.Amount = amount ??  expense.Amount;
         expense.Description = description ??  expense.Description;
@@ -40,7 +40,7 @@ public class ExpenseService(IExpenseRepository repository) : IExpenseService
 
     public void Delete(Guid id)
     {
-        if (!_expenses.Remove(id)) throw new KeyNotFoundException();
+        if (!Expenses.Remove(id)) throw new KeyNotFoundException();
         
         repository.Delete(id);
     }
