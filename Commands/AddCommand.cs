@@ -32,11 +32,15 @@ public class AddCommand(IExpenseService expenseService) : ICommand
                 result.AddError("Category is too long");
         });
         
+        command.Add(amountArgument);
+        command.Add(descriptionOption);
+        command.Add(categoryOption);
+        
         command.SetAction(result =>
         {
             var amount = result.GetRequiredValue(amountArgument);
             var description = result.GetValue(descriptionOption);
-            var category = result.GetRequiredValue(categoryOption);
+            var category = result.GetValue(categoryOption);
             var creationAt = DateTime.Now;
             
             expenseService.Add(amount, description, category, creationAt);
