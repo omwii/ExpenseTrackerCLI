@@ -24,7 +24,7 @@ public class JsonExpenseRepository : IExpenseRepository
     {
         EnsureDirectoryExists();
 
-        var path = Path.Combine("Expenses", id.ToString());
+        var path = Path.Combine("Expenses", $"{id.ToString()}.json");
 
         return File.Exists(path) ? JsonSerializer.Deserialize<Expense>(File.ReadAllText(path)) : null;
     }
@@ -33,7 +33,7 @@ public class JsonExpenseRepository : IExpenseRepository
     {
         EnsureDirectoryExists();
 
-        var path = Path.Combine("Expenses", expense.Id.ToString());
+        var path = Path.Combine("Expenses", $"{expense.Id.ToString()}.json");
 
         var json = JsonSerializer.Serialize(expense, SerializerOptions);
 
